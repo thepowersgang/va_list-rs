@@ -6,9 +6,9 @@ use super::VaPrimitive;
 
 #[allow(non_camel_case_types)]
 /// Core type as passed though the FFI
-pub struct va_list(*mut VaListInner);
-// /// Saves the state of the va_list, similar to va_copy
-//impl Clone for va_list { fn clone(&self) -> Self { va_list(self.0) } }
+pub struct VaList(*mut VaListInner);
+// /// Saves the state of the VaList, similar to va_copy
+//impl Clone for VaList { fn clone(&self) -> Self { va_list(self.0) } }
 
 #[repr(C)]
 #[derive(Debug)]
@@ -22,9 +22,9 @@ pub struct VaListInner
 	reg_save_area: *const (),
 }
 
-impl va_list
+impl VaList
 {
-	/// Read a value from the va_list
+	/// Read a value from the VaList
 	///
 	/// Users should take care that they are reading the correct type
 	pub unsafe fn get<T: VaPrimitive>(&mut self) -> T {
@@ -75,7 +75,7 @@ impl VaListInner
 
 impl<T: 'static> VaPrimitive for *const T
 {
-	unsafe fn get(list: &mut va_list) -> Self {
+	unsafe fn get(list: &mut VaList) -> Self {
 		<usize>::get(list) as *const T
 	}
 }
@@ -83,7 +83,7 @@ impl<T: 'static> VaPrimitive for *const T
 macro_rules! impl_va_prim {
 	($u:ty, $s:ty) => {
 		impl VaPrimitive for $u {
-			unsafe fn get(list: &mut va_list) -> Self {
+			unsafe fn get(list: &mut VaList) -> Self {
 				let inner = list.inner();
 				// See the ELF AMD64 ABI document for a description of how this should act
 				if ! inner.check_space(1, 0) {
@@ -95,7 +95,7 @@ macro_rules! impl_va_prim {
 			}
 		}
 		impl VaPrimitive for $s {
-			unsafe fn get(list: &mut va_list) -> Self {
+			unsafe fn get(list: &mut VaList) -> Self {
 				mem::transmute( <$u>::get(list) )
 			}
 		}
@@ -105,6 +105,6 @@ macro_rules! impl_va_prim {
 impl_va_prim!{ usize, isize }
 impl_va_prim!{ u64, i64 }
 impl_va_prim!{ u32, i32 }
-impl_va_prim!{ u16, i16 }
-impl_va_prim!{ u8, i8 }
+//impl_va_prim!{ u16, i16 }
+//impl_va_prim!{ u8, i8 }
 

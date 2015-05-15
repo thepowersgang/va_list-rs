@@ -2,6 +2,11 @@
 name = "va_list"
 version = "0.0.1"
 authors = [ "John Hodge <tpg@mutabah.net>" ]
+description = "Provides a rust implementation of the 'va_list' type for a small set of ABIs. Allowing rust implementations of functions like vprintf."
+repository = "https://github.com/thepowersgang/va_list-rs"
+readme = "README.md"
+keywords = ["unsafe", "va_list", "ffi", "c"]
+license = "MIT"
 
 [dev-dependencies.va_list-helper]
 path = "deps/helper/"
