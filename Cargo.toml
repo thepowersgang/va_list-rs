@@ -9,4 +9,5 @@ keywords = ["unsafe", "va_list", "ffi", "c"]
 license = "MIT"
 
 [dev-dependencies.va_list-helper]
+version = "*"
 path = "deps/helper/"
