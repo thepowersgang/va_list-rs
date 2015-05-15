@@ -1,7 +1,8 @@
 [package]
-name = "va_list"
+name = "va_list-helper"
 version = "0.0.1"
 authors = [ "John Hodge <tpg@mutabah.net>" ]
+build = "build.rs"
 
-[dev-dependencies.va_list-helper]
-path = "deps/helper/"
+[build-dependencies]
+gcc = "*"
