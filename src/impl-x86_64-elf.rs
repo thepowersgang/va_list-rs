@@ -52,7 +52,7 @@ impl VaListInner
 		rv
 	}
 	unsafe fn get_overflow<T>(&mut self) -> T {
-		let align = mem::min_align_of::<T>();
+		let align = mem::align_of::<T>();
 		// 7. Align overflow_reg_area upwards to a 16-byte boundary if alignment
 		//    needed by T exceeds 8 bytes
 		let addr = self.overflow_arg_area as usize;

@@ -17,7 +17,7 @@ impl VaList
 	
 	// Read a raw value from the list
 	unsafe fn get_raw<T: 'static>(&mut self) -> T {
-		assert_eq!(self.0 as usize % mem::min_align_of::<T>(), 0);
+		assert_eq!(self.0 as usize % mem::align_of::<T>(), 0);
 		let rv = ptr::read(self.0 as *const T);
 		self.0 = self.0.offset( mem::size_of::<T>() as isize );
 		rv
