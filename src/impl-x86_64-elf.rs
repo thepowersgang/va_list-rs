@@ -1,5 +1,4 @@
 
-#[cfg(nightly)] use core::prelude::*;
 #[cfg(nightly)] use core::{mem,ptr};
 #[cfg(not(nightly))] use std::{mem,ptr};
 use super::VaPrimitive;

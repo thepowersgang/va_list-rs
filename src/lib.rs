@@ -16,14 +16,10 @@
  * }
  * ```
  */
-#![cfg_attr(nightly,feature(no_std,core,core_prelude))]
+#![cfg_attr(nightly,feature(no_std))]
 #![cfg_attr(no_std,no_std)]
 #![crate_type="lib"]
 #![crate_name="va_list"]
-
-#[cfg(nightly)]
-#[macro_use]
-extern crate core;
 
 // x86_64 on unix platforms is _usually_ ELF.
 #[cfg(target_arch="x86_64")] #[cfg(target_family="unix")]
