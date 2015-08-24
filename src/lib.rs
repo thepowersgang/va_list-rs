@@ -6,13 +6,14 @@
  * ## Example 
  * ```rust
  * extern crate va_list;
- * use va_list::VaList;
  * 
- * extern "C" print_ints_va(count: u32, mut args: VaList)
+ * extern "C" fn print_ints_va(count: u32, mut args: va_list::VaList)
  * {
- * 	for i in (0 .. count) {
- * 		println!("{}: {}", i, args.get::<i32>());
- * 	}
+ *   unsafe {
+ *     for i in (0 .. count) {
+ *       println!("{}: {}", i, args.get::<i32>());
+ *     }
+ *   }
  * }
  * ```
  */

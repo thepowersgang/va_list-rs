@@ -1,5 +1,6 @@
 extern crate va_list;
 
+#[link(name="va_list_test")]
 extern "C" {
 	fn dispatch(context: *mut (), count: u32, ...);
 }
