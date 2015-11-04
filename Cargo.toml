@@ -8,6 +8,9 @@ readme = "README.md"
 keywords = ["unsafe", "va_list", "ffi", "c"]
 license = "MIT"
 
+[features]
+no_std = []
+
 [dev-dependencies.va_list-helper]
 version = "*"
 path = "deps/helper/"
