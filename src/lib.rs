@@ -17,10 +17,15 @@
  * }
  * ```
  */
-#![cfg_attr(nightly,feature(no_std))]
-#![cfg_attr(no_std,no_std)]
+#![cfg_attr(any(feature="no_std",nightly),feature(no_std))]
+#![cfg_attr(any(feature="no_std",no_std),no_std)]
 #![crate_type="lib"]
 #![crate_name="va_list"]
+
+#[cfg(any(feature="no_std",no_std))] #[doc(hidden)]
+mod std {
+	pub use core::{mem,ptr};
+}
 
 // x86_64 on unix platforms is _usually_ ELF.
 #[cfg(target_arch="x86_64")] #[cfg(target_family="unix")]
