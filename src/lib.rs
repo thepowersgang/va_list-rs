@@ -37,6 +37,9 @@ mod std {
 #[cfg(target_arch="x86")] #[cfg(target_family="unix")]
 #[path="impl-x86-sysv.rs"] mod imp;
 
+#[cfg(target_arch="arm")] #[cfg(target_family="unix")]
+#[path="impl-arm-sysv.rs"] mod imp;
+
 pub use imp::VaList;
 
 /// Trait implemented on types that can be read from a va_list
