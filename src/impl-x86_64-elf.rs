@@ -1,16 +1,14 @@
-
+// x86_64 ELF - Aka the Itanium ABI
+//
 use std::{mem,ptr};
 use super::VaPrimitive;
 
-#[allow(non_camel_case_types)]
-/// Core type as passed though the FFI
 pub struct VaList(*mut VaListInner);
 // /// Saves the state of the VaList, similar to va_copy
 //impl Clone for VaList { fn clone(&self) -> Self { va_list(self.0) } }
 
 #[repr(C)]
 #[derive(Debug)]
-#[allow(raw_pointer_derive)]
 #[doc(hidden)]
 pub struct VaListInner
 {
@@ -22,14 +20,6 @@ pub struct VaListInner
 
 impl VaList
 {
-	/// Read a value from the VaList
-	///
-	/// Users should take care that they are reading the correct type
-	pub unsafe fn get<T: VaPrimitive>(&mut self) -> T {
-		//log_debug!("inner = {:p} {:?}", self.0, *self.0);
-		T::get(self)
-	}
-	
 	fn inner(&mut self) -> &mut VaListInner {
 		// This pointer should be valid
 		unsafe { &mut *self.0 }

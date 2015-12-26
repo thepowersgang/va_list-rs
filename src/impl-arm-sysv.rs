@@ -1,8 +1,7 @@
 /*
  *
  */
-#[cfg(nightly)] use core::{mem,ptr};
-#[cfg(not(nightly))] use std::{mem,ptr};
+use std::{mem,ptr};
 use super::VaPrimitive;
 
 #[allow(non_camel_case_types)]
