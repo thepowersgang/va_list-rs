@@ -12,5 +12,5 @@ license = "MIT"
 no_std = []
 
 [dev-dependencies.va_list-helper]
-version = "*"
+version = "0.0.2"
 path = "deps/helper/"

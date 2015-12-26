@@ -1,8 +1,10 @@
 [package]
 name = "va_list-helper"
-version = "0.0.1"
+version = "0.0.2"
 authors = [ "John Hodge <tpg@mutabah.net>" ]
 build = "build.rs"
+description = "Test helper for the `va_list` crate. Not for user consumption."
+license = "MIT"
 
 [build-dependencies]
-gcc = "*"
+gcc = "0.3"
