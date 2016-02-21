@@ -6,7 +6,7 @@ description = "Provides a rust implementation of the 'va_list' type for a small 
 repository = "https://github.com/thepowersgang/va_list-rs"
 readme = "README.md"
 keywords = ["unsafe", "va_list", "ffi", "c"]
-license = "MIT"
+license = "MIT OR Apache-2.0"
 
 [features]
 no_std = []
