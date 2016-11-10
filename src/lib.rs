@@ -48,8 +48,8 @@ mod std {
 #[path="impl-x86_64-elf.rs"] mod imp;
 
 //// x86_64 on windows is special
-//#[cfg(all( target_arch="x86_64", target_family="windows" ))]
-//#[path="impl-x86_64-elf.rs"] mod imp;
+#[cfg(all( target_arch="x86_64", target_family="windows" ))]
+#[path="impl-x86_64-win64.rs"] mod imp;
 
 // x86+unix = cdecl
 #[cfg(all( target_arch="x86", target_family="unix" ))]

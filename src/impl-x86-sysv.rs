@@ -39,5 +39,5 @@ impl VaPrimitive for i32 { unsafe fn get(l: &mut VaList) -> Self { l.get_raw() }
 //impl VaPrimitive for u8 { unsafe fn get(l: &mut VaList) -> Self { l.get_raw() } }
 //impl VaPrimitive for i8 { unsafe fn get(l: &mut VaList) -> Self { l.get_raw() } }
 impl VaPrimitive for f64 { unsafe fn get(l: &mut VaList) -> Self { l.get_raw() } }
-impl VaPrimitive for f32 { unsafe fn get(l: &mut VaList) -> Self { l.get_raw() } }
+//impl VaPrimitive for f32 { unsafe fn get(l: &mut VaList) -> Self { l.get_raw() } }
 

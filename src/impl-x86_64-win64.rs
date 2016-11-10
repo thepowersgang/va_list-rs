@@ -32,12 +32,12 @@ impl VaPrimitive for usize { unsafe fn get(l: &mut VaList) -> Self { l.get_raw()
 impl VaPrimitive for isize { unsafe fn get(l: &mut VaList) -> Self { l.get_raw() } }
 impl VaPrimitive for u64 { unsafe fn get(l: &mut VaList) -> Self { l.get_raw() } }
 impl VaPrimitive for i64 { unsafe fn get(l: &mut VaList) -> Self { l.get_raw() } }
-impl VaPrimitive for u32 { unsafe fn get(l: &mut VaList) -> Self { l.get_raw() } }
-impl VaPrimitive for i32 { unsafe fn get(l: &mut VaList) -> Self { l.get_raw() } }
+impl VaPrimitive for u32 { unsafe fn get(l: &mut VaList) -> Self { l.get_raw::<u64>() as _ } }
+impl VaPrimitive for i32 { unsafe fn get(l: &mut VaList) -> Self { l.get_raw::<i64>() as _ } }
 //impl VaPrimitive for u16 { unsafe fn get(l: &mut VaList) -> Self { l.get_raw() } }
 //impl VaPrimitive for i16 { unsafe fn get(l: &mut VaList) -> Self { l.get_raw() } }
 //impl VaPrimitive for u8 { unsafe fn get(l: &mut VaList) -> Self { l.get_raw() } }
 //impl VaPrimitive for i8 { unsafe fn get(l: &mut VaList) -> Self { l.get_raw() } }
+
 impl VaPrimitive for f64 { unsafe fn get(l: &mut VaList) -> Self { l.get_raw() } }
-//impl VaPrimitive for f32 { unsafe fn get(l: &mut VaList) -> Self { l.get_raw() } }
 
