@@ -44,7 +44,7 @@ mod std {
 }
 
 // x86_64 on unix platforms is _usually_ ELF.
-#[cfg(all( target_arch="x86_64", target_family="unix" ))]
+#[cfg(all( target_arch="x86_64", any(target_family="unix", target_os="tifflin") ))]
 #[path="impl-x86_64-elf.rs"] mod imp;
 
 //// x86_64 on windows is special
@@ -60,7 +60,10 @@ mod std {
 #[path="impl-arm-sysv.rs"] mod imp;
 
 /// Rust version of C's `va_list` type from the `stdarg.h` header
-pub struct VaList(imp::VaList);
+#[repr(C)]
+pub struct VaList {
+	internal: imp::VaList
+}
 
 /// Core type as passed though the FFI
 impl VaList
@@ -69,7 +72,7 @@ impl VaList
 	///
 	/// Users should take care that they are reading the correct type
 	pub unsafe fn get<T: VaPrimitive>(&mut self) -> T {
-		T::get(&mut self.0)
+		T::get(&mut self.internal)
 	}
 }
 
