@@ -3,8 +3,9 @@
  *
  * This crate provides an interface for rust code to read values passed in C's va_list type.
  *
- * ## Example 
+ * ## Example
  * In C Code
+ *
  * ```c
  * #include <stdint.h>
  * #include <stdarg.h>
@@ -19,9 +20,10 @@
  * ```
  *
  * In rust code:
+ *
  * ```rust
  * extern crate va_list;
- * 
+ *
  * #[no_mangle]
  * extern "C" fn print_ints_va(count: u32, mut args: va_list::VaList)
  * {
