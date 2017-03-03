@@ -47,7 +47,7 @@ impl VaListInner
 	/// Need to have checked that the type requested will fit in what remains of the stack
 	unsafe fn get_fp<T>(&mut self) -> T {
 		let rv = ptr::read( (self.reg_save_area as usize + self.fp_offset as usize) as *const _ );
-		self.fp_offset += ((mem::size_of::<T>() + 15) & !15) as u32;
+		self.fp_offset += ((mem::size_of::<T>() + 15) & !15) as u32; // align up to 16 bits
 		rv
 	}
 
@@ -124,7 +124,7 @@ macro_rules! impl_va_float {
 					inner.get_overflow()
 				}
 				else {
-					inner.get_gp()
+					inner.get_fp()
 				}
 			}
 		}
