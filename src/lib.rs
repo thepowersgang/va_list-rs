@@ -59,6 +59,11 @@ mod imp;
 #[path = "impl-x86-sysv.rs"]
 mod imp;
 
+// aarch64
+#[cfg(all(target_arch = "aarch64", any(target_family = "unix", target_os = "redox")))]
+#[path = "impl-aarch64-elf.rs"]
+mod imp;
+
 // arm+unix = cdecl
 #[cfg(all(target_arch = "arm", target_family = "unix"))]
 #[path = "impl-arm-sysv.rs"]
