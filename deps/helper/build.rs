@@ -1,5 +1,7 @@
-extern crate gcc;
+extern crate cc;
 
 fn main() {
-	::gcc::compile_library("libva_list_test.a", &["src/helper.c"]);
+    ::cc::Build::new()
+        .file("src/helper.c")
+        .compile("libva_list_test.a");
 }

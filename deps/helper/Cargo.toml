@@ -7,4 +7,4 @@ description = "Test helper for the `va_list` crate. Not for user consumption."
 license = "MIT"
 
 [build-dependencies]
-gcc = "0.3"
+cc = "1.0"
