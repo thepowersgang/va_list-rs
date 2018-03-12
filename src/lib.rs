@@ -44,7 +44,8 @@ mod std {
 }
 
 // x86_64 on unix platforms is _usually_ ELF.
-#[cfg(all(target_arch = "x86_64", any(target_family = "unix", target_os = "tifflin")))]
+#[cfg(all(target_arch = "x86_64",
+          any(target_family = "unix", target_os = "redox", target_os = "tifflin")))]
 #[path = "impl-x86_64-elf.rs"]
 mod imp;
 
@@ -56,6 +57,11 @@ mod imp;
 // x86+unix = cdecl
 #[cfg(all(target_arch = "x86", target_family = "unix"))]
 #[path = "impl-x86-sysv.rs"]
+mod imp;
+
+// aarch64
+#[cfg(all(target_arch = "aarch64", any(target_family = "unix", target_os = "redox")))]
+#[path = "impl-aarch64-elf.rs"]
 mod imp;
 
 // arm+unix = cdecl

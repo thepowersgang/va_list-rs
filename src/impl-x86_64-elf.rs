@@ -29,6 +29,7 @@ impl VaListInner {
     fn check_space(&self, num_gp: u32, num_fp: u32) -> bool {
         !(self.gp_offset > 48 - num_gp * 8 || self.fp_offset > 304 - num_fp * 16)
     }
+
     unsafe fn get_gp<T>(&mut self) -> T {
         let n_gp = (mem::size_of::<T>() + 7) / 8;
         assert!(self.check_space(n_gp as u32, 0));
@@ -36,6 +37,7 @@ impl VaListInner {
         self.gp_offset += (8 * n_gp) as u32;
         rv
     }
+
     unsafe fn get_overflow<T>(&mut self) -> T {
         let align = mem::align_of::<T>();
         // 7. Align overflow_reg_area upwards to a 16-byte boundary if alignment
