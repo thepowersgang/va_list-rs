@@ -5,7 +5,8 @@
  *
  * ## Example
  * In C Code
- * ```c
+ *
+ * ```c++
  * #include <stdint.h>
  * #include <stdarg.h>
  * extern void print_ints_va(uint32_t count, va_list args);
@@ -19,6 +20,7 @@
  * ```
  *
  * In rust code:
+ *
  * ```rust
  * extern crate va_list;
  *
