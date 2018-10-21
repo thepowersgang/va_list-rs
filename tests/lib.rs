@@ -1,8 +1,9 @@
 extern crate va_list;
+extern crate libc;
 
-#[link(name = "va_list_test")]
+#[link(name = "va_list_test", kind="static")]
 extern "C" {
-    fn dispatch(context: *mut u8, count: u32, ...);
+    fn dispatch(context: *mut u8, count: ::libc::c_uint, ...);
 }
 
 type CbType<'a> = &'a mut FnMut(u32, va_list::VaList);
@@ -42,7 +43,7 @@ fn trivial_values() {
 }
 
 #[test]
-#[cfg(not(all(target_arch = "x86_64", target_family = "unix")))] // TODO: Float on AMD64
+#[cfg(not(all(target_arch = "x86_64", target_family = "unix")))] // TODO: Float on AMD64 unix
 fn floating_point() {
     test_va_list!(
         4,

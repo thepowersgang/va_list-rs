@@ -1,40 +1,40 @@
-/*!
- * C FFI - va_list support
- *
- * This crate provides an interface for rust code to read values passed in C's va_list type.
- *
- * ## Example
- * In C Code
- *
- * ```c++
- * #include <stdint.h>
- * #include <stdarg.h>
- * extern void print_ints_va(uint32_t count, va_list args);
- * extern void print_ints(uint32_t count, ...)
- * {
- *   va_list args;
- *   va_start(args, count);
- *   print_ints_va(count, args);
- *   va_end(args);
- * }
- * ```
- *
- * In rust code:
- *
- * ```rust
- * extern crate va_list;
- *
- * #[no_mangle]
- * extern "C" fn print_ints_va(count: u32, mut args: va_list::VaList)
- * {
- *   unsafe {
- *     for i in (0 .. count) {
- *       println!("{}: {}", i, args.get::<i32>());
- *     }
- *   }
- * }
- * ```
- */
+//!
+//! C FFI - va_list support
+//!
+//! This crate provides an interface for rust code to read values passed in C's va_list type.
+//!
+//! ## Example
+//! In C Code
+//!
+//! ```c++
+//! #include <stdint.h>
+//! #include <stdarg.h>
+//! extern void print_ints_va(uint32_t count, va_list args);
+//! extern void print_ints(uint32_t count, ...)
+//! {
+//!   va_list args;
+//!   va_start(args, count);
+//!   print_ints_va(count, args);
+//!   va_end(args);
+//! }
+//! ```
+//!
+//! In rust code:
+//!
+//! ```rust
+//! extern crate va_list;
+//!
+//! #[no_mangle]
+//! extern "C" fn print_ints_va(count: u32, mut args: va_list::VaList)
+//! {
+//!   unsafe {
+//!     for i in (0 .. count) {
+//!       println!("{}: {}", i, args.get::<i32>());
+//!     }
+//!   }
+//! }
+//! ```
+//!
 #![cfg_attr(feature = "no_std", no_std)]
 #![crate_type = "lib"]
 #![crate_name = "va_list"]

@@ -1,6 +1,6 @@
 [package]
 name = "va_list"
-version = "0.1.0"
+version = "0.1.1"
 authors = [ "John Hodge <tpg@mutabah.net>" ]
 description = "Provides a rust implementation of the 'va_list' type for a small set of ABIs. Allowing rust implementations of functions like vprintf."
 repository = "https://github.com/thepowersgang/va_list-rs"
@@ -14,3 +14,6 @@ no_std = []
 [dev-dependencies.va_list-helper]
 version = "0.0.2"
 path = "deps/helper/"
+
+[dev-dependencies]
+libc = "0.2"

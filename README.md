@@ -1,7 +1,7 @@
 Rust implementation of C's `va_list` type
 
 # Overview
-This crate provides a rust `VaList`type, which is binary-compatible for the C type of the same name. It is intended to allow rust code to provide the complex logic of variable argument functions.
+This crate provides a rust `VaList`type, which is binary-compatible for the C `va_list` type. It is intended to allow rust code to provide the complex logic of variable argument functions.
 
 # Example
 ```rust
