@@ -42,7 +42,7 @@
 #[cfg(feature = "no_std")]
 #[doc(hidden)]
 mod std {
-    pub use core::{mem, ptr};
+    pub use core::{mem, ptr, ffi};
 }
 
 // x86_64 on unix platforms is _usually_ ELF.
