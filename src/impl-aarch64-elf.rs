@@ -1,15 +1,16 @@
 use std::{mem, ptr};
 use super::VaPrimitive;
 
+#[repr(C)]
 pub struct VaList(*mut VaListInner);
 
 #[repr(C)]
 #[derive(Debug)]
 #[doc(hidden)]
 pub struct VaListInner {
-    stack: *const (),
-    gr_top: *const (),
-    vr_top: *const (),
+    stack: *const u64,
+    gr_top: *const u64,
+    vr_top: *const u64,
     gr_offs: i32,
     vr_offs: i32,
 }

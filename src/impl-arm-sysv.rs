@@ -4,7 +4,7 @@
 use std::{mem, ptr};
 use super::VaPrimitive;
 
-#[allow(non_camel_case_types)]
+#[allow(C)]
 pub struct VaList(*const u8);
 
 impl VaList {

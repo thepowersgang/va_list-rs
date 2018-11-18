@@ -1,8 +1,10 @@
 // x86_64 ELF - Aka the Itanium ABI
 //
 use std::{mem, ptr};
+use std::ffi::c_void;
 use super::VaPrimitive;
 
+#[repr(C)]
 pub struct VaList(*mut VaListInner);
 // /// Saves the state of the VaList, similar to va_copy
 //impl Clone for VaList { fn clone(&self) -> Self { va_list(self.0) } }
@@ -13,8 +15,8 @@ pub struct VaList(*mut VaListInner);
 pub struct VaListInner {
     gp_offset: u32,
     fp_offset: u32,
-    overflow_arg_area: *const (),
-    reg_save_area: *const (),
+    overflow_arg_area: *const c_void,
+    reg_save_area: *const c_void,
 }
 
 impl VaList {
