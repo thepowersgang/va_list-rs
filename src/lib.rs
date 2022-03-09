@@ -62,13 +62,22 @@ mod imp;
 mod imp;
 
 // aarch64
-#[cfg(all(target_arch = "aarch64", any(target_family = "unix", target_os = "redox")))]
+#[cfg(all(
+    target_arch = "aarch64",
+    any(target_family = "unix", target_os = "redox"),
+    not(any(target_os = "macos", target_os = "ios")),
+))]
 #[path = "impl-aarch64-elf.rs"]
 mod imp;
 
 // arm+unix = cdecl
 #[cfg(all(target_arch = "arm", target_family = "unix"))]
 #[path = "impl-arm-sysv.rs"]
+mod imp;
+
+// aarch64+macos
+#[cfg(all(target_arch = "aarch64", any(target_os = "macos", target_os = "ios")))]
+#[path = "impl-aarch64-macos.rs"]
 mod imp;
 
 /// Rust version of C's `va_list` type from the `stdarg.h` header

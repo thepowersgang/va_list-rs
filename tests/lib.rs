@@ -32,8 +32,10 @@ fn trivial_values() {
     // Trivial test: Pass four random-ish sized integers
     test_va_list!(
         4,
-        (123456u32, 2u64, 1i32, -23i64),
+        (0xaabbaabbu32, 0xccddccddu32, 123456u32, 2u64, 1i32, -23i64),
         |_count, mut list: va_list::VaList| unsafe {
+            assert_eq!(list.get::<u32>(), 0xaabbaabb);
+            assert_eq!(list.get::<u32>(), 0xccddccdd);
             assert_eq!(list.get::<u32>(), 123456u32);
             assert_eq!(list.get::<u64>(), 2u64);
             assert_eq!(list.get::<i32>(), 1i32);

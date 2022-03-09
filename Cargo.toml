@@ -1,7 +1,10 @@
 [package]
 name = "va_list"
-version = "0.1.3"
-authors = [ "John Hodge <tpg@mutabah.net>" ]
+version = "0.1.4"
+authors = [
+    "John Hodge <tpg@mutabah.net>",
+    "Georgy Moshkin <gmoshkin@picodata.io>",
+]
 description = "Provides a rust implementation of the 'va_list' type for a small set of ABIs. Allowing rust implementations of functions like vprintf."
 repository = "https://github.com/thepowersgang/va_list-rs"
 readme = "README.md"
