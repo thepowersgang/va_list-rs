@@ -1,17 +1,14 @@
+// TODO: This is identical to the arm-sysv code
 /*
  *
  */
 use std::{mem, ptr};
 use super::VaPrimitive;
 
-#[repr(C)]
-pub struct VaList(*const u8);
+#[repr(transparent)]
+pub struct VaList<'a>(*const u8, ::std::marker::PhantomData<&'a [usize]>);
 
-impl VaList {
-    pub unsafe fn get<T: VaPrimitive>(&mut self) -> T {
-        T::get(self)
-    }
-
+impl<'a> VaList<'a> {
     // Read a raw value from the list
     unsafe fn get_raw<T: 'static>(&mut self) -> T {
         assert_eq!(self.0 as usize % mem::align_of::<T>(), 0);
@@ -22,47 +19,27 @@ impl VaList {
 }
 
 impl<T: 'static> VaPrimitive for *const T {
-    unsafe fn get(list: &mut VaList) -> Self {
-        <usize>::get(list) as *const T
-    }
-}
-impl VaPrimitive for usize {
     unsafe fn get(l: &mut VaList) -> Self {
-        l.get_raw()
+		l.get_raw()
     }
 }
-impl VaPrimitive for isize {
-    unsafe fn get(l: &mut VaList) -> Self {
-        l.get_raw()
-    }
+macro_rules! impl_va_prim {
+	( $( $t:ty, )+ ) => {
+		$(
+			impl VaPrimitive for $t {
+				unsafe fn get(l: &mut VaList) -> Self {
+					l.get_raw()
+				}
+			}
+		)+
+	};
 }
-impl VaPrimitive for u64 {
-    unsafe fn get(l: &mut VaList) -> Self {
-        l.get_raw()
-    }
+impl_va_prim!{
+	usize, isize,
+	u64, i64,
+	u32, i32,
+	// No 16-bit/8-bit values - not valid
+	f64,
+	// TODO: is f32 valid?
 }
-impl VaPrimitive for i64 {
-    unsafe fn get(l: &mut VaList) -> Self {
-        l.get_raw()
-    }
-}
-impl VaPrimitive for u32 {
-    unsafe fn get(l: &mut VaList) -> Self {
-        l.get_raw()
-    }
-}
-impl VaPrimitive for i32 {
-    unsafe fn get(l: &mut VaList) -> Self {
-        l.get_raw()
-    }
-}
-//impl VaPrimitive for u16 { unsafe fn get(l: &mut VaList) -> Self { l.get_raw() } }
-//impl VaPrimitive for i16 { unsafe fn get(l: &mut VaList) -> Self { l.get_raw() } }
-//impl VaPrimitive for u8 { unsafe fn get(l: &mut VaList) -> Self { l.get_raw() } }
-//impl VaPrimitive for i8 { unsafe fn get(l: &mut VaList) -> Self { l.get_raw() } }
-impl VaPrimitive for f64 {
-    unsafe fn get(l: &mut VaList) -> Self {
-        l.get_raw()
-    }
-}
-//impl VaPrimitive for f32 { unsafe fn get(l: &mut VaList) -> Self { l.get_raw() } }
+

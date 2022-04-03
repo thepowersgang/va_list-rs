@@ -2,12 +2,10 @@
 //
 use std::{mem, ptr};
 use std::ffi::c_void;
-use super::VaPrimitive;
+use super::VaPrimitive;	// Note: Uses `super` for testing purposes
 
-#[repr(C)]
-pub struct VaList(*mut VaListInner);
-// /// Saves the state of the VaList, similar to va_copy
-//impl Clone for VaList { fn clone(&self) -> Self { va_list(self.0) } }
+#[repr(transparent)]
+pub struct VaList<'a>(&'a mut VaListInner);
 
 #[repr(C)]
 #[derive(Debug)]
@@ -19,10 +17,9 @@ pub struct VaListInner {
     reg_save_area: *const c_void,
 }
 
-impl VaList {
+impl<'a> VaList<'a> {
     fn inner(&mut self) -> &mut VaListInner {
-        // This pointer should be valid
-        unsafe { &mut *self.0 }
+        &mut *self.0
     }
 }
 
@@ -62,6 +59,7 @@ impl VaListInner {
     }
 }
 
+
 impl<T: 'static> VaPrimitive for *const T {
     unsafe fn get(list: &mut VaList) -> Self {
         <usize>::get(list) as *const T
@@ -94,3 +92,4 @@ impl_va_prim!{ u64, i64 }
 impl_va_prim!{ u32, i32 }
 //impl_va_prim!{ u16, i16 }
 //impl_va_prim!{ u8, i8 }
+

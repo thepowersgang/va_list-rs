@@ -1,6 +1,6 @@
 [package]
 name = "va_list"
-version = "0.1.4"
+version = "0.2.0"
 authors = [
     "John Hodge <tpg@mutabah.net>",
     "Georgy Moshkin <gmoshkin@picodata.io>",
@@ -20,3 +20,4 @@ path = "deps/helper/"
 
 [dev-dependencies]
 libc = "0.2"
+

@@ -6,7 +6,7 @@ extern "C" {
     fn dispatch(context: *mut u8, count: ::libc::c_uint, ...);
 }
 
-type CbType<'a> = &'a mut FnMut(u32, va_list::VaList);
+type CbType<'a> = &'a mut dyn FnMut(u32, va_list::VaList);
 
 #[no_mangle]
 /// Method called by 'dispatch'

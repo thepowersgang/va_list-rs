@@ -45,59 +45,78 @@ mod std {
     pub use core::{mem, ptr, ffi};
 }
 
-// x86_64 on unix platforms is _usually_ ELF.
-#[cfg(all(target_arch = "x86_64",
-          any(target_family = "unix", target_os = "redox", target_os = "tifflin")))]
-#[path = "impl-x86_64-elf.rs"]
-mod imp;
+// Helper macro that allows build-testing all platforms at once
+macro_rules! def_platforms {
+	(
+		$(
+		if $conds:meta {
+			mod $name:ident = $path:expr;
+		}
+		)*
+	) => {
+	#[cfg(build_check_all)]
+	#[path="."]
+	mod build_all {
+		$(
+		#[path="."]
+		mod $name {
+			#[path=$path]
+			mod imp;
 
-//// x86_64 on windows is special
-#[cfg(all(target_arch = "x86_64", target_family = "windows"))]
-#[path = "impl-x86_64-win64.rs"]
-mod imp;
+			#[allow(dead_code)]
+			mod wrapper;
+			#[allow(dead_code)]
+			use self::wrapper::*;
+		}
+		)*
+	}
 
-// x86+unix = cdecl
-#[cfg(all(target_arch = "x86", target_family = "unix"))]
-#[path = "impl-x86-sysv.rs"]
-mod imp;
-
-// aarch64
-#[cfg(all(
-    target_arch = "aarch64",
-    any(target_family = "unix", target_os = "redox"),
-    not(any(target_os = "macos", target_os = "ios")),
-))]
-#[path = "impl-aarch64-elf.rs"]
-mod imp;
-
-// arm+unix = cdecl
-#[cfg(all(target_arch = "arm", target_family = "unix"))]
-#[path = "impl-arm-sysv.rs"]
-mod imp;
-
-// aarch64+macos
-#[cfg(all(target_arch = "aarch64", any(target_os = "macos", target_os = "ios")))]
-#[path = "impl-aarch64-macos.rs"]
-mod imp;
-
-/// Rust version of C's `va_list` type from the `stdarg.h` header
-#[repr(C)]
-pub struct VaList {
-    internal: imp::VaList,
+	$(
+		#[cfg($conds)]
+		#[path=$path]
+		mod imp;
+	)*
+	}
 }
 
-/// Core type as passed though the FFI
-impl VaList {
-    /// Read a value from the VaList.
-    ///
-    /// Users should take care that they are reading the correct type
-    pub unsafe fn get<T: VaPrimitive>(&mut self) -> T {
-        T::get(&mut self.internal)
-    }
+def_platforms! {
+	// x86+unix = cdecl
+	if all(target_arch = "x86", target_family = "unix") {
+		mod x86_unix = "impl-x86-sysv.rs";
+	}
+	// arm+unix = cdecl
+	if all(target_arch = "arm", target_family = "unix") {
+		mod arm_sysv = "impl-arm-sysv.rs";
+	}
+
+	// x86_64 on unix platforms is _usually_ the ELF/itanium ABI
+	if all(
+		target_arch = "x86_64",
+		any(target_family = "unix", target_os = "redox", target_os = "tifflin")
+		) {
+		mod x8664_elf = "impl-x86_64-elf.rs";
+	}
+	// x86_64 windows = ?cdecl (64-bit)
+	if all(target_arch = "x86_64", target_family = "windows") {
+		mod x8665_win64 = "impl-x86_64-win64.rs";
+	}
+
+	// aarch64 elf ABI
+	if all(
+		target_arch = "aarch64",
+		any(target_family = "unix", target_os = "redox"),
+		not(any(target_os = "macos", target_os = "ios")),	// Apple uses a 64-bit cdecl instead
+		) {
+		mod aarch64_elf = "impl-aarch64-elf.rs";
+	}
+
+	// aarch64+macos = cdecl (64-bit)
+	if all(target_arch = "aarch64", any(target_os = "macos", target_os = "ios")) {
+		mod aarch64_macos = "impl-aarch64-macos.rs";
+	}
 }
 
-/// Trait implemented on types that can be read from a va_list
-pub trait VaPrimitive: 'static {
-    #[doc(hidden)]
-    unsafe fn get(&mut imp::VaList) -> Self;
-}
+/// Wrapper logic, shared for testing
+mod wrapper;
+pub use self::wrapper::*;
+

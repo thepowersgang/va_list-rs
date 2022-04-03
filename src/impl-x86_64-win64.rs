@@ -4,10 +4,10 @@
 use std::{mem, ptr};
 use super::VaPrimitive;
 
-#[repr(C)]
-pub struct VaList(*const u8);
+#[repr(transparent)]
+pub struct VaList<'a>(*const u8, ::std::marker::PhantomData<&'a [usize]>);
 
-impl VaList {
+impl<'a> VaList<'a> {
     // Read a raw value from the list
     unsafe fn get_raw<T: 'static>(&mut self) -> T {
         assert_eq!(self.0 as usize % mem::align_of::<T>(), 0);
@@ -42,6 +42,7 @@ impl VaPrimitive for i64 {
         l.get_raw()
     }
 }
+// 32-bit defers to 64-bit
 impl VaPrimitive for u32 {
     unsafe fn get(l: &mut VaList) -> Self {
         l.get_raw::<u64>() as u32
@@ -62,3 +63,4 @@ impl VaPrimitive for f64 {
         l.get_raw()
     }
 }
+

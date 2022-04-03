@@ -2,15 +2,13 @@ use std::ffi::c_void;
 use super::VaPrimitive;
 
 #[repr(transparent)]
-pub struct VaList(VaListInner);
-
-#[repr(transparent)]
-pub struct VaListInner {
+pub struct VaList<'a> {
     ptr: *mut c_void,
+	pd: ::std::marker::PhantomData<&'a [usize]>,
 }
 
-impl VaListInner {
-    unsafe fn get<T>(&mut self) -> T {
+impl<'a> VaList<'a> {
+    unsafe fn get_raw<T>(&mut self) -> T {
         let res = std::ptr::read(self.ptr as _);
         self.ptr = self.ptr.add(8);
         res
@@ -19,7 +17,7 @@ impl VaListInner {
 
 impl<T: 'static> VaPrimitive for *const T {
     unsafe fn get(list: &mut VaList) -> Self {
-        list.0.get()
+        list.get_raw()
     }
 }
 
@@ -28,7 +26,7 @@ macro_rules! impl_va_prim {
         $(
             impl VaPrimitive for $t {
                 unsafe fn get(list: &mut VaList) -> Self {
-                    list.0.get()
+                    list.get_raw()
                 }
             }
         )+

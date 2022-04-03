@@ -1,8 +1,10 @@
-use std::{mem, ptr};
+//! Implementation for AArch64 (ARM 64-bit) ELF platforms
+//!
+use std::{mem,ptr};
 use super::VaPrimitive;
 
-#[repr(C)]
-pub struct VaList(*mut VaListInner);
+#[repr(transparent)]
+pub struct VaList<'a>(&'a mut VaListInner);
 
 #[repr(C)]
 #[derive(Debug)]
@@ -15,10 +17,9 @@ pub struct VaListInner {
     vr_offs: i32,
 }
 
-impl VaList {
+impl<'a> VaList<'a> {
     fn inner(&mut self) -> &mut VaListInner {
-        // This pointer should be valid
-        unsafe { &mut *self.0 }
+		&mut *self.0
     }
 }
 
@@ -75,3 +76,4 @@ impl_va_prim_gr!{ usize, isize }
 impl_va_prim_gr!{ u64, i64 }
 impl_va_prim_gr!{ u32, i32 }
 impl_va_prim_vr!{ f64, f32 }
+
