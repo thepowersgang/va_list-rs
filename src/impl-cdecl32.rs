@@ -1,19 +1,25 @@
-// TODO: This is identical to the arm-sysv code
 /*
- *
+ * "cdecl32"
+ * Standard stack-based calling convention, with 32-bit aligment
  */
-use std::{mem, ptr};
+use ::core::mem;
 use super::VaPrimitive;
 
+const ALIGN: usize = 4;
+
 #[repr(transparent)]
-pub struct VaList<'a>(*const u8, ::std::marker::PhantomData<&'a [usize]>);
+pub struct VaList<'a>(*const u8, ::core::marker::PhantomData<&'a [u32]>);
 
 impl<'a> VaList<'a> {
     // Read a raw value from the list
+	// UNSAFE: Doesn't check that the value is POD
     unsafe fn get_raw<T: 'static>(&mut self) -> T {
+		// TODO: Advance until type's alignment is met?
         assert_eq!(self.0 as usize % mem::align_of::<T>(), 0);
-        let rv = ptr::read(self.0 as *const T);
-        self.0 = self.0.offset(mem::size_of::<T>() as isize);
+        let rv = ::core::ptr::read(self.0 as *const T);
+		// Allow reading under-sized values (always advance by a multiple of 32-bits)
+		let slots = (mem::size_of::<T>() + (ALIGN-1)) / ALIGN;
+        self.0 = self.0.offset( (slots * ALIGN) as isize );
         rv
     }
 }

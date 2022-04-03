@@ -12,7 +12,6 @@ keywords = ["unsafe", "va_list", "ffi", "c"]
 license = "MIT OR Apache-2.0"
 
 [features]
-no_std = []
 
 [dev-dependencies.va_list-helper]
 version = "0.0.2"

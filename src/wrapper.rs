@@ -22,3 +22,15 @@ pub trait VaPrimitive: 'static {
     #[doc(hidden)]
     unsafe fn get(_: &mut imp::VaList) -> Self;
 }
+
+#[allow(dead_code)]
+mod check_core_types {
+	struct Foo<T: super::VaPrimitive>([T;0]);
+
+	struct Checks {
+		_ptr: Foo<*const u8>,
+		_usize: Foo<usize>,
+		_isize: Foo<isize>,
+	}
+}
+

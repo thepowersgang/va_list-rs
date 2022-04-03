@@ -1,7 +1,7 @@
 // x86_64 ELF - Aka the Itanium ABI
 //
-use std::{mem, ptr};
-use std::ffi::c_void;
+use ::core::{mem, ptr};
+use ::core::ffi::c_void;
 use super::VaPrimitive;	// Note: Uses `super` for testing purposes
 
 #[repr(transparent)]

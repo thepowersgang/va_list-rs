@@ -1,6 +1,6 @@
 //! Implementation for AArch64 (ARM 64-bit) ELF platforms
 //!
-use std::{mem,ptr};
+use ::core::{mem,ptr};
 use super::VaPrimitive;
 
 #[repr(transparent)]

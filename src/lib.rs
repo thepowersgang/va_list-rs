@@ -35,15 +35,7 @@
 //! }
 //! ```
 //!
-#![cfg_attr(feature = "no_std", no_std)]
-#![crate_type = "lib"]
-#![crate_name = "va_list"]
-
-#[cfg(feature = "no_std")]
-#[doc(hidden)]
-mod std {
-    pub use core::{mem, ptr, ffi};
-}
+#![no_std]
 
 // Helper macro that allows build-testing all platforms at once
 macro_rules! def_platforms {
@@ -82,11 +74,11 @@ macro_rules! def_platforms {
 def_platforms! {
 	// x86+unix = cdecl
 	if all(target_arch = "x86", target_family = "unix") {
-		mod x86_unix = "impl-x86-sysv.rs";
+		mod x86_unix = "impl-cdecl32.rs";
 	}
 	// arm+unix = cdecl
 	if all(target_arch = "arm", target_family = "unix") {
-		mod arm_sysv = "impl-arm-sysv.rs";
+		mod arm_sysv = "impl-cdecl32.rs";
 	}
 
 	// x86_64 on unix platforms is _usually_ the ELF/itanium ABI
@@ -98,7 +90,7 @@ def_platforms! {
 	}
 	// x86_64 windows = ?cdecl (64-bit)
 	if all(target_arch = "x86_64", target_family = "windows") {
-		mod x8665_win64 = "impl-x86_64-win64.rs";
+		mod x8664_win64 = "impl-cdecl64.rs";
 	}
 
 	// aarch64 elf ABI
@@ -112,7 +104,7 @@ def_platforms! {
 
 	// aarch64+macos = cdecl (64-bit)
 	if all(target_arch = "aarch64", any(target_os = "macos", target_os = "ios")) {
-		mod aarch64_macos = "impl-aarch64-macos.rs";
+		mod aarch64_macos = "impl-cdecl64.rs";
 	}
 }
 
