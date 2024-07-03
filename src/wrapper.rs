@@ -1,4 +1,3 @@
-
 use super::imp;
 
 /// Rust version of C's `va_list` type from the `stdarg.h` header
@@ -25,12 +24,11 @@ pub trait VaPrimitive: 'static {
 
 #[allow(dead_code)]
 mod check_core_types {
-	struct Foo<T: super::VaPrimitive>([T;0]);
+    struct Foo<T: super::VaPrimitive>([T; 0]);
 
-	struct Checks {
-		_ptr: Foo<*const u8>,
-		_usize: Foo<usize>,
-		_isize: Foo<isize>,
-	}
+    struct Checks {
+        _ptr: Foo<*const u8>,
+        _usize: Foo<usize>,
+        _isize: Foo<isize>,
+    }
 }
-

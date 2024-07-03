@@ -51,7 +51,7 @@ impl VaListInner {
                 self.overflow_arg_area = ((addr + 7) & !(8 - 1)) as *const _;
             }
         }
-        // 8. Fetch from overflow areay
+        // 8. Fetch from overflow area
         let rv = ptr::read(self.overflow_arg_area as *const _);
         self.overflow_arg_area =
             ((self.overflow_arg_area as usize) + mem::size_of::<T>()) as *const _;
