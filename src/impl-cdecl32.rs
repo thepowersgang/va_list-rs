@@ -1,6 +1,6 @@
 /*
  * "cdecl32"
- * Standard stack-based calling convention, with 32-bit aligment
+ * Standard stack-based calling convention, with 32-bit alignment
  */
 use ::core::mem;
 use super::VaPrimitive;

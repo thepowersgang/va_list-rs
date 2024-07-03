@@ -28,7 +28,7 @@
 //! extern "C" fn print_ints_va(count: u32, mut args: va_list::VaList)
 //! {
 //!   unsafe {
-//!     for i in (0 .. count) {
+//!     for i in 0 .. count {
 //!       println!("{}: {}", i, args.get::<i32>());
 //!     }
 //!   }
@@ -72,43 +72,42 @@ macro_rules! def_platforms {
 }
 
 def_platforms! {
-	// x86+unix = cdecl
-	if all(target_arch = "x86", target_family = "unix") {
-		mod x86_unix = "impl-cdecl32.rs";
-	}
-	// arm+unix = cdecl
-	if all(target_arch = "arm", target_family = "unix") {
-		mod arm_sysv = "impl-cdecl32.rs";
-	}
+    // x86+unix = cdecl
+    if all(target_arch = "x86", target_family = "unix") {
+        mod x86_unix = "impl-cdecl32.rs";
+    }
+    // arm+unix = cdecl
+    if all(target_arch = "arm", target_family = "unix") {
+        mod arm_sysv = "impl-cdecl32.rs";
+    }
 
-	// x86_64 on unix platforms is _usually_ the ELF/itanium ABI
-	if all(
-		target_arch = "x86_64",
-		any(target_family = "unix", target_os = "redox", target_os = "tifflin")
-		) {
-		mod x8664_elf = "impl-x86_64-elf.rs";
-	}
-	// x86_64/arm64 windows = cdecl (64-bit)
-	if all(any(target_arch = "x86_64", target_arch = "aarch64"), target_family = "windows") {
-		mod x8664_win64 = "impl-cdecl64.rs";
-	}
+    // x86_64 on unix platforms is _usually_ the ELF/itanium ABI
+    if all(
+        target_arch = "x86_64",
+        any(target_family = "unix", target_os = "redox", target_os = "tifflin")
+        ) {
+        mod x8664_elf = "impl-x86_64-elf.rs";
+    }
+    // x86_64/arm64 windows = cdecl (64-bit)
+    if all(any(target_arch = "x86_64", target_arch = "aarch64"), target_family = "windows") {
+        mod x8664_win64 = "impl-cdecl64.rs";
+    }
 
-	// aarch64 elf ABI
-	if all(
-		target_arch = "aarch64",
-		any(target_family = "unix", target_os = "redox"),
-		not(any(target_os = "macos", target_os = "ios")),	// Apple uses a 64-bit cdecl instead
-		) {
-		mod aarch64_elf = "impl-aarch64-elf.rs";
-	}
+    // aarch64 elf ABI
+    if all(
+        target_arch = "aarch64",
+        any(target_family = "unix", target_os = "redox"),
+        not(any(target_os = "macos", target_os = "ios")),	// Apple uses a 64-bit cdecl instead
+        ) {
+        mod aarch64_elf = "impl-aarch64-elf.rs";
+    }
 
-	// aarch64+macos = cdecl (64-bit)
-	if all(target_arch = "aarch64", any(target_os = "macos", target_os = "ios")) {
-		mod aarch64_macos = "impl-cdecl64.rs";
-	}
+    // aarch64+macos = cdecl (64-bit)
+    if all(target_arch = "aarch64", any(target_os = "macos", target_os = "ios")) {
+        mod aarch64_macos = "impl-cdecl64.rs";
+    }
 }
 
 /// Wrapper logic, shared for testing
 mod wrapper;
 pub use self::wrapper::*;
-

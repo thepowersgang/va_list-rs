@@ -1,9 +1,9 @@
-extern crate va_list;
 extern crate libc;
+extern crate va_list;
 
-#[link(name = "va_list_test", kind="static")]
+#[link(name = "va_list_test", kind = "static")]
 extern "C" {
-    fn dispatch(context: *mut u8, count: ::libc::c_uint, ...);
+    fn dispatch(context: *mut u8, count: libc::c_uint, ...);
 }
 
 type CbType<'a> = &'a mut dyn FnMut(u32, va_list::VaList);
@@ -11,7 +11,7 @@ type CbType<'a> = &'a mut dyn FnMut(u32, va_list::VaList);
 #[no_mangle]
 /// Method called by 'dispatch'
 pub extern "C" fn inbound(context: *mut u8, count: u32, args: va_list::VaList) {
-    let cb_ptr = unsafe { ::std::ptr::read(context as *mut CbType) };
+    let cb_ptr = unsafe { std::ptr::read(context as *mut CbType) };
     // call passed closure
     (cb_ptr)(count, args);
 }
