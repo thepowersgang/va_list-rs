@@ -88,8 +88,8 @@ def_platforms! {
 		) {
 		mod x8664_elf = "impl-x86_64-elf.rs";
 	}
-	// x86_64 windows = ?cdecl (64-bit)
-	if all(target_arch = "x86_64", target_family = "windows") {
+	// x86_64/arm64 windows = cdecl (64-bit)
+	if all(any(target_arch = "x86_64", target_arch = "aarch64"), target_family = "windows") {
 		mod x8664_win64 = "impl-cdecl64.rs";
 	}
 
