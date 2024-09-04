@@ -102,6 +102,16 @@ def_platforms! {
 		mod aarch64_elf = "impl-aarch64-elf.rs";
 	}
 
+	// riscv64+unix = cdecl (64-bit)
+	if all(target_arch = "riscv64", target_family = "unix") {
+		mod riscv64_unix = "impl-cdecl64.rs";
+	}
+
+	// loongarch64+unix = cdecl (64-bit)
+	if all(target_arch = "loongarch64", target_family = "unix") {
+		mod loongarch64_unix = "impl-cdecl64.rs";
+	}
+
 	// aarch64+macos = cdecl (64-bit)
 	if all(target_arch = "aarch64", any(target_os = "macos", target_os = "ios")) {
 		mod aarch64_macos = "impl-cdecl64.rs";
