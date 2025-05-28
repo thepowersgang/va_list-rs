@@ -29,7 +29,21 @@ macro_rules! test_va_list {
 
 #[test]
 fn trivial_values() {
-    // Trivial test: Pass four random-ish sized integers
+    // Trivial test: Pass six random-ish sized integers
+    // - The tester consumes two arguments (context and count), so this is a total of 8 arguments - enough to overflow x86_64-elf
+    test_va_list!(
+        4,
+        (0xaabbaabbu32, 0xccddccddu32, 123456u32, 2u64, 1i32, -23i64),
+        |_count, mut list: va_list::VaList| unsafe {
+            assert_eq!(list.get::<u32>(), 0xaabbaabb);
+            assert_eq!(list.get::<u32>(), 0xccddccdd);
+            assert_eq!(list.get::<u32>(), 123456u32);
+            assert_eq!(list.get::<u64>(), 2u64);
+            assert_eq!(list.get::<i32>(), 1i32);
+            assert_eq!(list.get::<i64>(), -23i64);
+        }
+    );
+    // Repeat the test
     test_va_list!(
         4,
         (0xaabbaabbu32, 0xccddccddu32, 123456u32, 2u64, 1i32, -23i64),
