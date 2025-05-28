@@ -1,7 +1,6 @@
 // x86_64 ELF - Aka the Itanium ABI
 //
 use ::core::{mem, ptr};
-use ::core::ffi::c_void;
 use super::VaPrimitive;	// Note: Uses `super` for testing purposes
 
 #[repr(transparent)]
@@ -11,10 +10,14 @@ pub struct VaList<'a>(&'a mut VaListInner);
 #[derive(Debug)]
 #[doc(hidden)]
 pub struct VaListInner {
+    /// Offset of general-purpose registers in `reg_save_area`
     gp_offset: u32,
+    /// Offset of floating-point registers in `reg_save_area`
     fp_offset: u32,
-    overflow_arg_area: *const c_void,
-    reg_save_area: *const c_void,
+    /// Pointer to the on-stack arguments
+    overflow_arg_area: *const u64,
+    /// Save area for register arguments
+    reg_save_area: *const u64,
 }
 
 impl<'a> VaList<'a> {
@@ -25,18 +28,25 @@ impl<'a> VaList<'a> {
 
 #[doc(hidden)]
 impl VaListInner {
-    fn check_space(&self, num_gp: u32, num_fp: u32) -> bool {
-        !(self.gp_offset > 48 - num_gp * 8 || self.fp_offset > 304 - num_fp * 16)
+    /// Checks that the specified number of registers can be read from the save area
+    fn check_space_gp(&self, num_gp: u32) -> bool {
+        self.gp_offset / 8 + num_gp <= 6
+    }
+    /// Checks that the specified number of registers can be read from the save area
+    fn check_space_fp(&self, num_fp: u32) -> bool {
+        self.fp_offset + num_fp * 16 <= 304
     }
 
+    /// Read an argument from a general-purpose register
     unsafe fn get_gp<T>(&mut self) -> T {
         let n_gp = (mem::size_of::<T>() + 7) / 8;
-        assert!(self.check_space(n_gp as u32, 0));
-        let rv = ptr::read((self.reg_save_area as usize + self.gp_offset as usize) as *const _);
+        assert!(self.check_space_gp(n_gp as u32));
+        let rv = ptr::read(self.reg_save_area.offset(self.gp_offset as isize / 8) as *const _);
         self.gp_offset += (8 * n_gp) as u32;
         rv
     }
 
+    /// Read an argument from the overflow region
     unsafe fn get_overflow<T>(&mut self) -> T {
         let align = mem::align_of::<T>();
         // 7. Align overflow_reg_area upwards to a 16-byte boundary if alignment
@@ -66,13 +76,13 @@ impl<T: 'static> VaPrimitive for *const T {
     }
 }
 
-macro_rules! impl_va_prim {
+macro_rules! impl_va_prim_gp {
     ($u: ty, $s: ty) => {
         impl VaPrimitive for $u {
             unsafe fn get(list: &mut VaList) -> Self {
                 let inner = list.inner();
                 // See the ELF AMD64 ABI document for a description of how this should act
-                if !inner.check_space(1, 0) {
+                if !inner.check_space_gp(1) {
                     inner.get_overflow()
                 } else {
                     inner.get_gp()
@@ -87,9 +97,27 @@ macro_rules! impl_va_prim {
     };
 }
 
-impl_va_prim!{ usize, isize }
-impl_va_prim!{ u64, i64 }
-impl_va_prim!{ u32, i32 }
+impl_va_prim_gp!{ usize, isize }
+impl_va_prim_gp!{ u64, i64 }
+impl_va_prim_gp!{ u32, i32 }
 //impl_va_prim!{ u16, i16 }
 //impl_va_prim!{ u8, i8 }
+
+macro_rules! impl_va_prim_fp {
+    ($t: ty) => {
+        impl VaPrimitive for $t {
+            unsafe fn get(list: &mut VaList) -> Self {
+                let inner = list.inner();
+                // See the ELF AMD64 ABI document for a description of how this should act
+                if !inner.check_space_fp(1) {
+                    inner.get_overflow()
+                } else {
+                    inner.get_gp()
+                }
+            }
+        }
+    }
+}
+impl_va_prim_fp!{ f32 }
+impl_va_prim_fp!{ f64 }
 
