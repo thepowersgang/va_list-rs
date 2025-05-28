@@ -17,9 +17,18 @@ extern "C" print_ints_va(count: u32, mut args: VaList)
 ```
 
 # Status
-- x86-64 linux/ELF ABI (aka System-V) : Tested in the wild, works relatively well
-- x86 linux/ELF ABI (sys-v) : Unit tested only
-
+- x86_64 ELF (aka System-V)
+  - Linux: CI tested, and used in the wild
+- `aarch64` ELF: Minimal testing
+  - Unix (not macos)
+- `cdecl32` 32-bit: Minimal testing
+  - Unix x86/arm32
+  - Windows
+- `cdecl` 64-bit: CI tested
+  - macos amd64
+  - Windows
+  - Unix riscv64
+  - unix `loongarch64`
 
 ## License
 
