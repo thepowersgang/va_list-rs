@@ -1,6 +1,6 @@
 [package]
 name = "va_list"
-version = "0.2.0"
+version = "0.2.1"
 authors = [
     "John Hodge <tpg@mutabah.net>",
     "Georgy Moshkin <gmoshkin@picodata.io>",
