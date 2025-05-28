@@ -20,3 +20,5 @@ path = "deps/helper/"
 [dev-dependencies]
 libc = "0.2"
 
+[lints.rust]
+unexpected_cfgs = { level = "warn", check-cfg = ['cfg(build_check_all)'] }
