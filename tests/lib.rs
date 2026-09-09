@@ -1,3 +1,5 @@
+use std::mem::MaybeUninit;
+
 extern crate va_list;
 extern crate libc;
 
@@ -38,9 +40,15 @@ fn trivial_values() {
             assert_eq!(list.get::<u32>(), 0xaabbaabb);
             assert_eq!(list.get::<u32>(), 0xccddccdd);
             assert_eq!(list.get::<u32>(), 123456u32);
+            let mut buf = MaybeUninit::uninit();
+            let mut list2 = list.copy(&mut buf);
             assert_eq!(list.get::<u64>(), 2u64);
             assert_eq!(list.get::<i32>(), 1i32);
             assert_eq!(list.get::<i64>(), -23i64);
+
+            assert_eq!(list2.get::<u64>(), 2u64);
+            assert_eq!(list2.get::<i32>(), 1i32);
+            assert_eq!(list2.get::<i64>(), -23i64);
         }
     );
     // Repeat the test
@@ -51,9 +59,15 @@ fn trivial_values() {
             assert_eq!(list.get::<u32>(), 0xaabbaabb);
             assert_eq!(list.get::<u32>(), 0xccddccdd);
             assert_eq!(list.get::<u32>(), 123456u32);
+            let mut buf = MaybeUninit::uninit();
+            let mut list2 = list.copy(&mut buf);
             assert_eq!(list.get::<u64>(), 2u64);
             assert_eq!(list.get::<i32>(), 1i32);
             assert_eq!(list.get::<i64>(), -23i64);
+
+            assert_eq!(list2.get::<u64>(), 2u64);
+            assert_eq!(list2.get::<i32>(), 1i32);
+            assert_eq!(list2.get::<i64>(), -23i64);
         }
     );
 }
