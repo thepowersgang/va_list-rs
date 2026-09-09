@@ -10,6 +10,8 @@ const ALIGN: usize = 8;
 #[repr(transparent)]
 pub struct VaList<'a>(*const u8, ::core::marker::PhantomData<&'a [u64]>);
 
+pub type VaListBuffer = ();
+
 impl<'a> VaList<'a> {
     // Read a raw value from the list
 	// UNSAFE: Doesn't check that the value is POD
@@ -21,6 +23,11 @@ impl<'a> VaList<'a> {
 		let slots = (mem::size_of::<T>() + (ALIGN-1)) / ALIGN;
         self.0 = self.0.offset( (slots * ALIGN) as isize );
         rv
+    }
+    pub(crate) fn copy<'b>(&self, _buffer: &'b mut mem::MaybeUninit<super::VaListBuffer>) -> VaList<'b>
+        where 'a: 'b
+    {
+    	VaList(self.0, self.1)
     }
 }
 

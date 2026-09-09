@@ -7,6 +7,10 @@ pub struct VaList<'a> {
     internal: imp::VaList<'a>,
 }
 
+pub struct VaListBuffer {
+    pub(crate) internal: imp::VaListBuffer,
+}
+
 /// Core type as passed though the FFI
 impl<'a> VaList<'a> {
     /// Read a value from the VaList.
@@ -14,6 +18,14 @@ impl<'a> VaList<'a> {
     /// Users should take care that they are reading the correct type
     pub unsafe fn get<T: VaPrimitive>(&mut self) -> T {
         T::get(&mut self.internal)
+    }
+
+    pub fn copy<'b>(&self, buffer: &'b mut ::core::mem::MaybeUninit<VaListBuffer>) -> VaList<'b>
+        where 'a: 'b
+    {
+        VaList {
+            internal: self.internal.copy(buffer)
+        }
     }
 }
 
