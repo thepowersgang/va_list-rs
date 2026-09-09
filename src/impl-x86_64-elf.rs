@@ -6,6 +6,8 @@ use super::VaPrimitive;	// Note: Uses `super` for testing purposes
 #[repr(transparent)]
 pub struct VaList<'a>(&'a mut VaListInner);
 
+pub type VaListBuffer = VaListInner;
+
 #[repr(C)]
 #[derive(Debug)]
 #[doc(hidden)]
@@ -23,6 +25,18 @@ pub struct VaListInner {
 impl<'a> VaList<'a> {
     fn inner(&mut self) -> &mut VaListInner {
         &mut *self.0
+    }
+    pub(crate) fn copy<'b>(&self, buffer: &'b mut mem::MaybeUninit<super::VaListBuffer>) -> VaList<'b>
+        where 'a: 'b
+    {
+        VaList(&mut buffer.write(super::VaListBuffer {
+            internal: VaListInner {
+                gp_offset: self.0.gp_offset,
+                fp_offset: self.0.fp_offset,
+                overflow_arg_area: self.0.overflow_arg_area,
+                reg_save_area: self.0.reg_save_area,
+            }
+        }).internal)
     }
 }
 
