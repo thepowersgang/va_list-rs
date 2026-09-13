@@ -20,11 +20,19 @@ impl<'a> VaList<'a> {
         T::get(&mut self.internal)
     }
 
-    pub fn copy<'b>(&self, buffer: &'b mut ::core::mem::MaybeUninit<VaListBuffer>) -> VaList<'b>
+    pub fn copy<'b>(&self, buffer: &'b mut VaListBuffer) -> VaList<'b>
         where 'a: 'b
     {
         VaList {
-            internal: self.internal.copy(buffer)
+            internal: self.internal.copy(&mut buffer.internal)
+        }
+    }
+}
+
+impl VaListBuffer {
+    pub fn new() -> Self {
+        Self {
+            internal: imp::VaListBuffer::new()
         }
     }
 }

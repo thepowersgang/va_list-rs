@@ -40,7 +40,7 @@ fn trivial_values() {
             assert_eq!(list.get::<u32>(), 0xaabbaabb);
             assert_eq!(list.get::<u32>(), 0xccddccdd);
             assert_eq!(list.get::<u32>(), 123456u32);
-            let mut buf = MaybeUninit::uninit();
+            let mut buf = va_list::VaListBuffer::new();
             let mut list2 = list.copy(&mut buf);
             assert_eq!(list.get::<u64>(), 2u64);
             assert_eq!(list.get::<i32>(), 1i32);
@@ -59,7 +59,7 @@ fn trivial_values() {
             assert_eq!(list.get::<u32>(), 0xaabbaabb);
             assert_eq!(list.get::<u32>(), 0xccddccdd);
             assert_eq!(list.get::<u32>(), 123456u32);
-            let mut buf = MaybeUninit::uninit();
+            let mut buf = va_list::VaListBuffer::new();
             let mut list2 = list.copy(&mut buf);
             assert_eq!(list.get::<u64>(), 2u64);
             assert_eq!(list.get::<i32>(), 1i32);
