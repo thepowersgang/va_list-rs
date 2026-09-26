@@ -1,7 +1,7 @@
 // x86_64 ELF - Aka the Itanium ABI
 //
-use ::core::{mem, ptr};
-use super::VaPrimitive;	// Note: Uses `super` for testing purposes
+use super::VaPrimitive;
+use core::{mem, ptr}; // Note: Uses `super` for testing purposes
 
 #[repr(transparent)]
 pub struct VaList<'a>(&'a mut VaListInner);
@@ -27,7 +27,8 @@ impl<'a> VaList<'a> {
         &mut *self.0
     }
     pub(crate) fn copy<'b>(&self, buffer: &'b mut VaListBuffer) -> VaList<'b>
-        where 'a: 'b
+    where
+        'a: 'b,
     {
         VaList(buffer.0.write(VaListInner {
             gp_offset: self.0.gp_offset,
@@ -55,8 +56,8 @@ impl VaListInner {
         self.fp_offset + num_fp * 16 <= 304
     }
 
-    unsafe fn get_fp<T>(&mut self) -> T {
-        let n_fp = (mem::size_of::<T>() + 7) / 8;
+    unsafe fn get_fp(&mut self) -> f64 {
+        let n_fp = (mem::size_of::<f64>() + 7) / 8;
         assert!(self.check_space_fp(n_fp as u32));
         let rv = ptr::read(self.reg_save_area.offset(self.fp_offset as isize / 8) as *const _);
         self.fp_offset += (16 * n_fp) as u32;
@@ -75,8 +76,8 @@ impl VaListInner {
     /// Read an argument from the overflow region
     unsafe fn get_overflow<T>(&mut self) -> T {
         let align = mem::align_of::<T>();
-        // 7. Align overflow_reg_area upwards to a 16-byte boundary if alignment
-        //    needed by T exceeds 8 bytes
+        // 7. Align overflow_reg_area upwards to a 16-byte boundary if alignment needed by T exceeds
+        //    8 bytes
         let addr = self.overflow_arg_area as usize;
         if align > 8 {
             if addr % 16 != 0 {
@@ -94,7 +95,6 @@ impl VaListInner {
         rv
     }
 }
-
 
 impl<T: 'static> VaPrimitive for *const T {
     unsafe fn get(list: &mut VaList) -> Self {
@@ -123,9 +123,9 @@ macro_rules! impl_va_prim_gp {
     };
 }
 
-impl_va_prim_gp!{ usize, isize }
-impl_va_prim_gp!{ u64, i64 }
-impl_va_prim_gp!{ u32, i32 }
+impl_va_prim_gp! { usize, isize }
+impl_va_prim_gp! { u64, i64 }
+impl_va_prim_gp! { u32, i32 }
 //impl_va_prim!{ u16, i16 }
 //impl_va_prim!{ u8, i8 }
 
@@ -138,12 +138,11 @@ macro_rules! impl_va_prim_fp {
                 if !inner.check_space_fp(1) {
                     inner.get_overflow()
                 } else {
-                    inner.get_fp()
+                    inner.get_fp() as $t
                 }
             }
         }
-    }
+    };
 }
-impl_va_prim_fp!{ f32 }
-impl_va_prim_fp!{ f64 }
-
+impl_va_prim_fp! { f32 }
+impl_va_prim_fp! { f64 }
