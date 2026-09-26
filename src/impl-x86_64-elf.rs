@@ -1,7 +1,7 @@
 // x86_64 ELF - Aka the Itanium ABI
 //
-use super::VaPrimitive;
-use core::{mem, ptr}; // Note: Uses `super` for testing purposes
+use super::VaPrimitive; // Note: Uses `super` for testing purposes
+use core::{mem, ptr};
 
 #[repr(transparent)]
 pub struct VaList<'a>(&'a mut VaListInner);
