@@ -10,7 +10,7 @@ const ALIGN: usize = 4;
 #[repr(transparent)]
 pub struct VaList<'a>(*const u8, ::core::marker::PhantomData<&'a [u32]>);
 
-pub type VaListBuffer = ();
+pub struct VaListBuffer(());
 
 impl<'a> VaList<'a> {
     // Read a raw value from the list
@@ -24,11 +24,17 @@ impl<'a> VaList<'a> {
         self.0 = self.0.offset( (slots * ALIGN) as isize );
         rv
     }
-    pub(crate) fn copy<'b>(&self, _buffer: &'b mut mem::MaybeUninit<super::VaListBuffer>) -> VaList<'b>
+    pub(crate) fn copy<'b>(&self, _buffer: &'b mut VaListBuffer) -> VaList<'b>
         where 'a: 'b
     {
     	VaList(self.0, self.1)
     }
+}
+
+impl VaListBuffer {
+	pub(crate) fn new() -> Self {
+		Self(())
+	}
 }
 
 impl<T: 'static> VaPrimitive for *const T {
