@@ -84,7 +84,7 @@ fn floating_point() {
 }
 
 #[test]
-fn mixed_float_double_int() {
+fn mixed_float_int() {
     test_va_list!(
         4,
         (
@@ -107,7 +107,7 @@ fn mixed_float_double_int() {
 }
 
 #[test]
-fn mixed_float_double_int_overflow() {
+fn mixed_float_int_overflow() {
     test_va_list!(
         4,
         (
