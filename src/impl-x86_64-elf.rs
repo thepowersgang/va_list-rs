@@ -53,7 +53,11 @@ impl VaListInner {
     }
     /// Checks that the specified number of registers can be read from the save area
     fn check_space_fp(&self, num_fp: u32) -> bool {
-        self.fp_offset + num_fp * 16 <= 304
+        // Whilst the ABI says that the right side should be 6*8 + 16*16 (= 304), it appears that
+        // only 8 floating point arguments are passed in registers. godbolt confirms this:
+        // https://godbolt.org/z/8P3va8ana shows that the ninth floating point argument is pushed
+        // onto the stack.
+        self.fp_offset + num_fp * 16 <= 6 * 8 + 8 * 16
     }
 
     unsafe fn get_fp<T>(&mut self) -> T {
