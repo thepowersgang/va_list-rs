@@ -27,8 +27,7 @@ impl<'a> VaList<'a> {
         &mut *self.0
     }
     pub(crate) fn copy<'b>(&self, buffer: &'b mut VaListBuffer) -> VaList<'b>
-    where
-        'a: 'b,
+        where 'a: 'b
     {
         VaList(buffer.0.write(VaListInner {
             gp_offset: self.0.gp_offset,
