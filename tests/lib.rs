@@ -1,5 +1,3 @@
-use std::mem::MaybeUninit;
-
 extern crate libc;
 extern crate va_list;
 
@@ -81,6 +79,81 @@ fn floating_point() {
         |_count, mut list: va_list::VaList| unsafe {
             assert_eq!(list.get::<f64>(), 123456f64);
             assert_eq!(list.get::<f64>(), 0.1f64);
+        }
+    );
+}
+
+#[test]
+fn mixed_float_double_int() {
+    test_va_list!(
+        4,
+        (
+            0xaabbaabbu32,
+            123456f64,
+            0xccddccddu32,
+            0.1f32 as ::std::ffi::c_double,
+            42i64,
+            2.5f64
+        ),
+        |_count, mut list: va_list::VaList| unsafe {
+            assert_eq!(list.get::<u32>(), 0xaabbaabb);
+            assert_eq!(list.get::<f64>(), 123456f64);
+            assert_eq!(list.get::<u32>(), 0xccddccdd);
+            assert_eq!(list.get::<f32>(), 0.1f32);
+            assert_eq!(list.get::<i64>(), 42i64);
+            assert_eq!(list.get::<f64>(), 2.5f64);
+        }
+    );
+}
+
+#[test]
+fn mixed_float_double_int_overflow() {
+    test_va_list!(
+        4,
+        (
+            1u32,
+            1.5f64,
+            2u32,
+            2.5f32 as ::std::ffi::c_double,
+            3u32,
+            3.5f64,
+            4u32,
+            4.5f32 as ::std::ffi::c_double,
+            5u32,
+            5.5f64
+        ),
+        |_count, mut list: va_list::VaList| unsafe {
+            assert_eq!(list.get::<u32>(), 1);
+            assert_eq!(list.get::<f64>(), 1.5f64);
+            assert_eq!(list.get::<u32>(), 2);
+            assert_eq!(list.get::<f32>(), 2.5f32);
+            assert_eq!(list.get::<u32>(), 3);
+            assert_eq!(list.get::<f64>(), 3.5f64);
+            assert_eq!(list.get::<u32>(), 4);
+            assert_eq!(list.get::<f32>(), 4.5f32);
+            assert_eq!(list.get::<u32>(), 5);
+            assert_eq!(list.get::<f64>(), 5.5f64);
+        }
+    );
+}
+
+#[test]
+fn mixed_float_int_with_copy() {
+    test_va_list!(
+        4,
+        (7u32, 1.25f64, -3i32, -2.75f64),
+        |_count, mut list: va_list::VaList| unsafe {
+            assert_eq!(list.get::<u32>(), 7);
+            assert_eq!(list.get::<f64>(), 1.25f64);
+
+            let mut buf = va_list::VaListBuffer::new();
+            let mut list2 = list.copy(&mut buf);
+
+            assert_eq!(list.get::<i32>(), -3i32);
+            assert_eq!(list.get::<f64>(), -2.75f64);
+
+            assert_eq!(list2.get::<i32>(), -3i32);
+            assert_eq!(list2.get::<f64>(), -2.75f64);
         }
     );
 }
