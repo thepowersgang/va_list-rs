@@ -56,8 +56,8 @@ impl VaListInner {
         self.fp_offset + num_fp * 16 <= 304
     }
 
-    unsafe fn get_fp(&mut self) -> f64 {
-        let n_fp = (mem::size_of::<f64>() + 7) / 8;
+    unsafe fn get_fp<T>(&mut self) -> T {
+        let n_fp = (mem::size_of::<T>() + 7) / 8;
         assert!(self.check_space_fp(n_fp as u32));
         let rv = ptr::read(self.reg_save_area.offset(self.fp_offset as isize / 8) as *const _);
         self.fp_offset += (16 * n_fp) as u32;
@@ -138,11 +138,11 @@ macro_rules! impl_va_prim_fp {
                 if !inner.check_space_fp(1) {
                     inner.get_overflow()
                 } else {
-                    inner.get_fp() as $t
+                    inner.get_fp()
                 }
             }
         }
     };
 }
-impl_va_prim_fp! { f32 }
 impl_va_prim_fp! { f64 }
+// impl_va_prim_fp! { f32 }

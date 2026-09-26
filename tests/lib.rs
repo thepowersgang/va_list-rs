@@ -91,7 +91,7 @@ fn mixed_float_double_int() {
             0xaabbaabbu32,
             123456f64,
             0xccddccddu32,
-            0.1f32 as ::std::ffi::c_double,
+            0.1f64,
             42i64,
             2.5f64
         ),
@@ -99,7 +99,7 @@ fn mixed_float_double_int() {
             assert_eq!(list.get::<u32>(), 0xaabbaabb);
             assert_eq!(list.get::<f64>(), 123456f64);
             assert_eq!(list.get::<u32>(), 0xccddccdd);
-            assert_eq!(list.get::<f32>(), 0.1f32);
+            assert_eq!(list.get::<f64>(), 0.1f64);
             assert_eq!(list.get::<i64>(), 42i64);
             assert_eq!(list.get::<f64>(), 2.5f64);
         }
@@ -114,21 +114,21 @@ fn mixed_float_double_int_overflow() {
             1u32,
             1.5f64,
             2u32,
-            2.5f32 as ::std::ffi::c_double,
+            2.5f64,
             3u32,
             3.5f64,
             4u32,
-            4.5f32 as ::std::ffi::c_double,
+            4.5f64,
             5u32,
             5.5f64,
             6u32,
             6.5f64,
             7u32,
-            7.5f32 as ::std::ffi::c_double,
+            7.5f64,
             8u32,
             8.5f64,
             9u32,
-            9.5f32 as ::std::ffi::c_double,
+            9.5f64,
             10u32,
             10.5f64
         ),
@@ -136,22 +136,22 @@ fn mixed_float_double_int_overflow() {
             assert_eq!(list.get::<u32>(), 1);
             assert_eq!(list.get::<f64>(), 1.5f64);
             assert_eq!(list.get::<u32>(), 2);
-            assert_eq!(list.get::<f32>(), 2.5f32);
+            assert_eq!(list.get::<f64>(), 2.5f64);
             assert_eq!(list.get::<u32>(), 3);
             assert_eq!(list.get::<f64>(), 3.5f64);
             assert_eq!(list.get::<u32>(), 4);
-            assert_eq!(list.get::<f32>(), 4.5f32);
+            assert_eq!(list.get::<f64>(), 4.5f64);
             assert_eq!(list.get::<u32>(), 5);
             assert_eq!(list.get::<f64>(), 5.5f64);
 
             assert_eq!(list.get::<u32>(), 6);
             assert_eq!(list.get::<f64>(), 6.5f64);
             assert_eq!(list.get::<u32>(), 7);
-            assert_eq!(list.get::<f32>(), 7.5f32);
+            assert_eq!(list.get::<f64>(), 7.5f64);
             assert_eq!(list.get::<u32>(), 8);
             assert_eq!(list.get::<f64>(), 8.5f64);
             assert_eq!(list.get::<u32>(), 9);
-            assert_eq!(list.get::<f32>(), 9.5f32);
+            assert_eq!(list.get::<f64>(), 9.5f64);
             assert_eq!(list.get::<u32>(), 10);
             assert_eq!(list.get::<f64>(), 10.5f64);
         }
