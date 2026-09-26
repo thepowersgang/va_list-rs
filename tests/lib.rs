@@ -120,7 +120,17 @@ fn mixed_float_double_int_overflow() {
             4u32,
             4.5f32 as ::std::ffi::c_double,
             5u32,
-            5.5f64
+            5.5f64,
+            6u32,
+            6.5f64,
+            7u32,
+            7.5f32 as ::std::ffi::c_double,
+            8u32,
+            8.5f64,
+            9u32,
+            9.5f32 as ::std::ffi::c_double,
+            10u32,
+            10.5f64
         ),
         |_count, mut list: va_list::VaList| unsafe {
             assert_eq!(list.get::<u32>(), 1);
@@ -133,6 +143,17 @@ fn mixed_float_double_int_overflow() {
             assert_eq!(list.get::<f32>(), 4.5f32);
             assert_eq!(list.get::<u32>(), 5);
             assert_eq!(list.get::<f64>(), 5.5f64);
+
+            assert_eq!(list.get::<u32>(), 6);
+            assert_eq!(list.get::<f64>(), 6.5f64);
+            assert_eq!(list.get::<u32>(), 7);
+            assert_eq!(list.get::<f32>(), 7.5f32);
+            assert_eq!(list.get::<u32>(), 8);
+            assert_eq!(list.get::<f64>(), 8.5f64);
+            assert_eq!(list.get::<u32>(), 9);
+            assert_eq!(list.get::<f32>(), 9.5f32);
+            assert_eq!(list.get::<u32>(), 10);
+            assert_eq!(list.get::<f64>(), 10.5f64);
         }
     );
 }
